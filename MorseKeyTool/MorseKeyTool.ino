@@ -67,9 +67,9 @@ void setup() {
   // initialize the button pin as a input:
   pinMode(ditButton, INPUT);
   pinMode(dahButton, INPUT);
-  pinMode(optionSelector, INPUT);
-  pinMode(optionDown, INPUT);
-  pinMode(optionUp, INPUT);
+  pinMode(optionSelector, INPUT_PULLUP);
+  pinMode(optionDown, INPUT_PULLUP);
+  pinMode(optionUp, INPUT_PULLUP);
 
 //  pinMode(A5, INPUT_PULLUP);
 //  pinMode(A4, OUTPUT);
@@ -383,19 +383,6 @@ void updateOption(int value) {
 
 void loop() {
 
-//  if (digitalRead(A5) == HIGH) {
-////    Serial.println("AUX CONNECTED");
-//    audioOutConnected = true;
-//    digitalWrite(A4, LOW);
-//  } else if (digitalRead(A5) == LOW) {
-////    Serial.println("AUX DISCONNECTED");
-//    audioOutConnected = false;
-//    digitalWrite(A4, HIGH);
-//  }
-  
-//  if (digitalRead(A4) == HIGH) {
-//    Serial.println("disconnected!");
-//  }
 
   // Clear OPTIONS from LCD screen after 5 seconds
   if (optionsDisplaying == true and (millis() - optionsDisplayStart) > 5000) {
@@ -404,34 +391,34 @@ void loop() {
   }
 
   // Handle OPTION UP button press/depress
-  if (digitalRead(optionUp) == 1 and optionUpPrevState == 0) {
-    optionUpPrevState = 1;
+  if (digitalRead(optionUp) == 0 and optionUpPrevState == 1) {
+    optionUpPrevState = 0;
     optionHoldStart = millis();
     updateOption(1);
   }
-  else if (digitalRead(optionUp) == 1 and optionUpPrevState == 1 and ((millis() - optionHoldStart)>2000)) {
+  else if (digitalRead(optionUp) == 0 and optionUpPrevState == 0 and ((millis() - optionHoldStart)>2000)) {
     updateOption(1);
   }
-  else if (digitalRead(optionUp) == 0) {
-    optionUpPrevState = 0;
+  else if (digitalRead(optionUp) == 1) {
+    optionUpPrevState = 1;
   }
   // Handle OPTION DOWN button press/depress
-  if (digitalRead(optionDown) == 1 and optionDownPrevState != 1) {
-    optionDownPrevState = 1;
+  if (digitalRead(optionDown) == 0 and optionDownPrevState != 0) {
+    optionDownPrevState = 0;
     optionHoldStart = millis();
     updateOption(-1);
   }
-  else if (digitalRead(optionDown) == 1 and optionDownPrevState == 1 and ((millis() - optionHoldStart)>2000)) {
+  else if (digitalRead(optionDown) == 0 and optionDownPrevState == 0 and ((millis() - optionHoldStart)>2000)) {
     updateOption(-1);
   }
-  else if (digitalRead(optionDown) == 0) {
-    optionDownPrevState = 0;
+  else if (digitalRead(optionDown) == 1) {
+    optionDownPrevState = 1;
   }
 
 
   // Handle OPTIONS button press/depress
-  if (digitalRead(optionSelector) == 0 and optionButtonPrevState != 0) {
-    optionButtonPrevState = 0;
+  if (digitalRead(optionSelector) == 1 and optionButtonPrevState != 1) {
+    optionButtonPrevState = 1;
     option += 1;
     if (option > 3) { option = 0; }
     // Skip option 3 if not in Iambic (double-paddle) mode
@@ -469,8 +456,8 @@ void loop() {
 //      optionsDisplayStart = millis();
 //    }
   }
-  else if (digitalRead(optionSelector) == 1 and optionButtonPrevState == 0) {
-    optionButtonPrevState = 1;
+  else if (digitalRead(optionSelector) == 0 and optionButtonPrevState == 1) {
+    optionButtonPrevState = 0;
   }
 
   // Handle CW Key press/depress
@@ -514,7 +501,6 @@ void loop() {
     }
     // Iambic Mode A, Iambic Mode B, or Single Lever
     else if (dahButtonState == LOW and ditButtonState == HIGH and keyType < 3) {
-      Serial.print("dah");
       // Paddles in normal orientation
       if (ditPaddle == 0) {
         playDah();
@@ -526,7 +512,6 @@ void loop() {
     }
     // Iambic Mode A, Iambic Mode B, or Single Lever
     else if (ditButtonState == LOW and dahButtonState == HIGH and keyType < 3) {
-      Serial.print("dit");
       if (ditPaddle == 0) {
         playDit();
       }
