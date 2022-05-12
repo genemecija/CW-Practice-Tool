@@ -58,15 +58,13 @@ String morseBuffer = "";
 String letterBuffer = "";
 
 
-// On startup, LCD should show "Start Keying!"
-// When dial is turned, option should show up for one second after the dial stops turning
 
 void setup() {
   lcd.begin(16, 2);
 
   // initialize the button pin as a input:
-  pinMode(ditButton, INPUT);
-  pinMode(dahButton, INPUT);
+  pinMode(ditButton, INPUT_PULLUP);
+  pinMode(dahButton, INPUT_PULLUP);
   pinMode(optionSelector, INPUT_PULLUP);
   pinMode(optionDown, INPUT_PULLUP);
   pinMode(optionUp, INPUT_PULLUP);
@@ -368,17 +366,6 @@ void updateOption(int value) {
     optionsDisplaying = true;
     optionsDisplayStart = millis();
   }
-//  else if (option == 4) {
-//    audioOut = audioOut + 1;
-//    if (audioOut > 1) {
-//      audioOut = 0;
-//    } else if (audioOut < 0) {
-//      audioOut = 1;
-//    }
-//    updateLCD_options("Audio Output", audioOut);
-//    optionsDisplaying = true;
-//    optionsDisplayStart = millis();
-//  }
 }
 
 void loop() {
@@ -446,11 +433,6 @@ void loop() {
       optionsDisplayStart = millis();
     }
 //    else if (option == 4) {
-//      optionsDisplaying = true;
-//      updateLCD_options("Audio Output", 0);
-//      optionsDisplayStart = millis();
-//    }
-//    else if (option == 5) {
 //      optionsDisplaying = true;
 //      updateLCD_options("Save Config", 1);
 //      optionsDisplayStart = millis();
